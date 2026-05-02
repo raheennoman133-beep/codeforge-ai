@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astra AI - Your Friendly AI Companion</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-rocket"></i>
+                <span>Astra AI</span>
+            </div>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="user-menu">
+                    <button class="user-btn" id="userBtn">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Free</span>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="user-info">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Free User</span>
+                        </div>
+                        <a href="#" class="dropdown-item" onclick="upgradePlan()">
+                            <i class="fas fa-crown"></i>
+                            Upgrade to Pro
+                        </a>
+                        <a href="privacy.html" class="dropdown-item" target="_blank">
+                            <i class="fas fa-shield-alt"></i>
+                            Privacy Policy
+                        </a>
+                        <div class="divider"></div>
+                        <button class="dropdown-item logout" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Chat Container -->
+    <main class="chat-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-bars"></i> New Chat</h3>
+                <button class="close-sidebar" id="closeSidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chat-history" id="chatHistory">
+                <div class="history-item active" data-chat="welcome">
+                    <i class="fas fa-comments"></i>
+                    <span>Welcome Chat</span>
+                    <button class="delete-chat" onclick="deleteChat(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <button class="clear-history" onclick="clearAllChats()">
+                    <i class="fas fa-trash-alt"></i>
+                    Clear All
+                </button>
+            </div>
+        </aside>
+
+        <!-- Chat Area -->
+        <section class="chat-area">
+            <!-- Welcome Screen -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <div class="welcome-content">
+                    <div class="ai-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h1>Hello! I'm Astra</h1>
+                    <p>Your friendly AI companion. Ask me anything!</p>
+                    <div class="quick-actions">
+                        <button class="quick-btn" onclick="startQuickChat('Explain quantum computing in simple terms')">
+                            <i class="fas fa-brain"></i>
+                            Explain AI
+                        </button>
+                        <button class="quick-btn" onclick="startQuickChat('Write a Python function to sort an array')">
+                            <i class="fas fa-code"></i>
+                            Code Help
+                        </button>
+                        <button class="quick-btn" onclick="startQuickChat('Create a workout plan for beginners')">
+                            <i class="fas fa-dumbbell"></i>
+                            Fitness
+                        </button>
+                        <button class="quick-btn" onclick="startQuickChat('Write a professional email template')">
+                            <i class="fas fa-envelope"></i>
+                            Email
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="messages-container" id="messagesContainer" style="display: none;">
+                <div class="loading-indicator" id="loadingIndicator" style="display: none;">
+                    <div class="typing-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <p>Astra is typing...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Chat Input -->
+    <div class="input-container" id="inputContainer">
+        <div class="input-wrapper">
+            <div class="input-actions">
+                <button class="input-btn" id="voiceBtn" title="Voice Input">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button class="input-btn" id="uploadBtn" title="Upload File">
+                    <i class="fas fa-paperclip"></i>
+                </button>
+            </div>
+            <div class="textarea-wrapper">
+                <textarea 
+                    id="messageInput" 
+                    placeholder="Message Astra... (Press Shift+Enter for new line)"
+                    rows="1"
+                ></textarea>
+                <button class="send-btn" id="sendBtn">
+                    <i class="fas fa-arrow-up"></i>
+                </button>
+            </div>
+        </div>
+        <div class="input-info">
+            <span class="free-limit" id="freeLimit">
+                <i class="fas fa-info-circle"></i>
+                Free: 50 messages/day remaining
+            </span>
+            <span class="pro-badge" onclick="upgradePlan()">
+                <i class="fas fa-crown"></i> Go Pro - Unlimited!
+            </span>
+        </div>
+    </div>
+
+    <!-- Upgrade Modal -->
+    <div class="modal" id="upgradeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Upgrade to Astra Pro</h2>
+                <button class="close-modal" id="closeUpgrade">&times;</button>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card free active">
+                    <div class="plan-badge">Current</div>
+                    <h3>Free</h3>
+                    <div class="price">$0<span>/month</span></div>
+                    <ul>
+                        <li><i class="fas fa-check"></i>50 messages/day</li>
+                        <li><i class="fas fa-check"></i>Basic AI models</li>
+                        <li><i class="fas fa-check"></i>Web search</li>
+                        <li><i class="fas fa-times"></i>Priority support</li>
+                    </ul>
+                </div>
+                <div class="pricing-card pro">
+                    <div class="plan-badge popular">Most Popular</div>
+                    <h3>Pro</h3>
+                    <div class="price">$19<span>/month</span></div>
+                    <ul>
+                        <li><i class="fas fa-check"></i>Unlimited messages</li>
+                        <li><i class="fas fa-check"></i>Advanced AI models</li>
+                        <li><i class="fas fa-check"></i>Priority support</li>
+                        <li><i class="fas fa-check"></i>Custom GPTs</li>
+                        <li><i class="fas fa-check"></i>Image generation</li>
+                    </ul>
+                    <button class="upgrade-btn" onclick="purchasePro()">
+                        Get Pro Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
